@@ -6,3 +6,7 @@
 ```
     $ javac -sourcepath . com/company/Main.java
 ```
+* To run
+```
+    $ javac . com/company/Main.java
+```
