@@ -4,7 +4,7 @@
 2. Building with command line:
 * Go into the source folder (src/)
 ```
-    $ javac -sourcepath . com/company/Main.java
+    $ javac -classpath . com/company/Main.java
 ```
 * To run
 ```
