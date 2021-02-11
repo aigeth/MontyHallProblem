@@ -8,6 +8,10 @@ public class MontyHallModel {
     private int playerPick;
     private int computerPick;
 
+    /**
+     * Model for the Monty Hall Problem containing all the states
+     * @param numberOfDoors If more than three doors are to be used
+     */
     public MontyHallModel(int numberOfDoors) {
         this.doors = new int[numberOfDoors];
         this.playerPick = -1;
@@ -42,13 +46,4 @@ public class MontyHallModel {
         this.computerPick = computerPick;
     }
 
-    //Helper method for expanding array
-   /* private static int[] expandArray(int array[]){
-        int newArray[] = new int[array.length + 1];
-        for(int i = 0; i < array.length; i++){
-            newArray[0] = array[0];
-        }
-
-        return newArray;
-    }*/
 }

@@ -1,55 +1,76 @@
 package com.company.states;
 
 import com.company.model.MontyHallModel;
+import com.company.model.ResultModel;
 
 import java.util.Random;
 
 public class GameState_ChangeDoor extends GameState{
 
-    protected GameState_ChangeDoor(MontyHallModel montyHallModel) {
-        super(montyHallModel);
+    /**
+     * Stateful Design Pattern.
+     * All state setup should be done here.
+     * @param montyHallModel The model that is passed on to different states
+     */
+    protected GameState_ChangeDoor(MontyHallModel montyHallModel, ResultModel resultModel) {
+        super(montyHallModel, resultModel);
     }
+
 
     @Override
     public void run() {
-        Random random = new Random();
-        setRandomComputerChoice();
-        System.out.println("Computer opened the " + (montyHallModel.getComputerPick() +1) + " door.");
-        System.out.println("Want to switch?");
+        System.out.println("Computer opened the door " + (montyHallModel.getComputerPick() +1) + ".");
+        System.out.println("Want to switch to the other one? Type Yes/y or No/n: ");
     }
 
     @Override
     public GameState handleInput(String input) {
-        return null;
+        if(input == null){
+            return error("Invalid Input!");
+        }
+
+        if(input.equalsIgnoreCase("yes") ||
+        input.equalsIgnoreCase("y")){
+            chooseRemainingBox();
+            return new GameState_Results(montyHallModel, resultModel, true);
+        }
+
+        if(input.equalsIgnoreCase("no") ||
+                input.equalsIgnoreCase("n")){
+            return new GameState_Results(montyHallModel, resultModel, false);
+        }
+
+        return error("Invalid Input!");
+    }
+
+    @Override
+    protected GameState error(String errorText) {
+        System.out.println(errorText);
+        return this;
     }
 
     /**
-     * Helper method for generating random choice for PC depending on choices available
-     * and converting them to the corresponding door.
+     * Helper method to switch to the remaining box.
+     * This needs to be changed if more than three doors are available.
      */
-    private void setRandomComputerChoice(){
-        int[] choices = new int[NumberOfDoors-1]; //Choices will always be a maximum of NumberOfDoors -1
-        int nrOfChoices = 0;
+    private void chooseRemainingBox(){
+        int remainingBox = 0;
         for (int i = 0; i < NumberOfDoors; i++){
-            if(montyHallModel.isDoorMoney(i)){
-                continue;
-            }
             if(i == montyHallModel.getPlayerPick()){
                 continue;
             }
-            choices[nrOfChoices] = i;
-            nrOfChoices++;
+            if(i == montyHallModel.getComputerPick()){
+                continue;
+            }
+            remainingBox = i;
         }
 
-        Random random = new Random();
-        int computerPick = random.nextInt(nrOfChoices);
-
-        montyHallModel.setComputerPick(choices[computerPick]);
-
+        montyHallModel.setPlayerPick(remainingBox);
     }
 
+
     /**
-     * Helper method to check if user has a valid pick
+     * If the game was ever to expand beyond 3 doors, this method will become useful.
      * @param index The door to pick
      * @return True or false
      */
@@ -57,30 +78,7 @@ public class GameState_ChangeDoor extends GameState{
         if(index == montyHallModel.getComputerPick()){
             return false;
         }
-        if(index < 0 || index >= NumberOfDoors){
-            return false;
-        }
-        return true;
+        return index >= 0 && index < NumberOfDoors;
     }
 
-
-    public void printAvailableChoicesForPlayer(){
-        int[] choices = new int[NumberOfDoors-1];
-        int nrOfChoices = 0;
-        for (int i = 0; i < NumberOfDoors; i++){
-            if(montyHallModel.isDoorMoney(i)){
-                continue;
-            }
-            if(i == montyHallModel.getComputerPick()){
-                continue;
-            }
-            choices[nrOfChoices] = i;
-            nrOfChoices++;
-        }
-
-    }
-
-    public GameState error(String errorText) {
-        return null;
-    }
 }
