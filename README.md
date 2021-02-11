@@ -10,3 +10,4 @@
 ```
     $ java com/company/Main
 ```
+3. With IDEs simply import the folder as a project and build & run from there.
